@@ -23,8 +23,17 @@ APP_PASSWORD = os.getenv("APP_PASSWORD")
 # Recipients
 # -----------------------------
 
-RECIPIENTS = [
-    "arnav.angarkar20@gmail.com",
+TO_EMAILS = [
+    "24bcs034@iiitdwd.ac.in",
+    "24bcs063@iiitdwd.ac.in"
+]
+
+CC_EMAILS = [
+    "24bcs015@iiitdwd.ac.in",
+    "24bcs001@iiitdwd.ac.in"
+]
+
+BCC_EMAILS = [
     "24bcs034@iiitdwd.ac.in"
 ]
 
@@ -52,31 +61,33 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
 
     server.login(SENDER, APP_PASSWORD)
 
-    for recipient in RECIPIENTS:
+    message = MIMEMultipart("related")
 
-        message = MIMEMultipart("related")
+    message["From"] = SENDER
+    message["To"] = ", ".join(TO_EMAILS)
+    if CC_EMAILS:
+        message["Cc"] = ", ".join(CC_EMAILS)
+    
+    message["Subject"] = SUBJECT
 
-        message["From"] = SENDER
-        message["To"] = recipient
-        message["Subject"] = SUBJECT
+    # Tell email client this is HTML
+    message.attach(
+        MIMEText(html_content, "html", "utf-8")
+    )
 
-        # Tell email client this is HTML
-        message.attach(
-            MIMEText(html_content, "html", "utf-8")
-        )
+    # Attach the image inline
+    with open("ganpati.jpg", "rb") as img_file:
+        img = MIMEImage(img_file.read())
+        img.add_header('Content-ID', '<ganpati_img>')
+        message.attach(img)
 
-        # Attach the image inline
-        with open("ganpati.jpg", "rb") as img_file:
-            img = MIMEImage(img_file.read())
-            img.add_header('Content-ID', '<ganpati_img>')
-            message.attach(img)
+    # Combine all recipients for the SMTP envelope
+    all_recipients = TO_EMAILS + CC_EMAILS + BCC_EMAILS
 
+    server.sendmail(
+        SENDER,
+        all_recipients,
+        message.as_string()
+    )
 
-
-        server.sendmail(
-            SENDER,
-            recipient,
-            message.as_string()
-        )
-
-        print(f"✅ Sent to {recipient}")
+    print("✅ Email sent successfully to all recipients!")
