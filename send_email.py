@@ -24,17 +24,19 @@ APP_PASSWORD = os.getenv("APP_PASSWORD")
 # -----------------------------
 
 TO_EMAILS = [
-    "24bcs034@iiitdwd.ac.in",
-    "24bcs063@iiitdwd.ac.in"
+    "students@iiitdwd.ac.in",
+    "warden@iiitdwd.ac.in"
 ]
 
 CC_EMAILS = [
-    "24bcs015@iiitdwd.ac.in",
-    "24bcs001@iiitdwd.ac.in"
+    "anandbarangi@iiitdwd.ac.in"
 ]
 
 BCC_EMAILS = [
-    "24bcs034@iiitdwd.ac.in"
+    "24bcs034@iiitdwd.ac.in",
+    "24bcs015@iiitdwd.ac.in",
+    "24bcs001@iiitdwd.ac.in",
+    "24bcs138@iiitdwd.ac.in"
 ]
 
 
@@ -76,7 +78,7 @@ with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
     )
 
     # Attach the image inline
-    with open("ganpati.jpg", "rb") as img_file:
+    with open("image.png", "rb") as img_file:
         img = MIMEImage(img_file.read())
         img.add_header('Content-ID', '<ganpati_img>')
         message.attach(img)
